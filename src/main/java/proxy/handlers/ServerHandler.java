@@ -1,7 +1,9 @@
-package proxy;
+package proxy.handlers;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import proxy.Proxy;
+import proxy.protocol.ProtocolParams;
 
 import java.io.IOException;
 import java.net.InetAddress;
@@ -116,7 +118,15 @@ public class ServerHandler implements Handler {
         serverKey.cancel();
         Proxy.getInstance().removeChannelFromMap(serverChannel);
         try {
-            serverChannel.close();
+            if (serverChannel != null) {
+                serverChannel.shutdownInput();
+                serverChannel.shutdownOutput();
+            }
+        } catch (IOException e) {
+            log.error(e.toString());
+        }
+        try {
+            if (serverChannel != null) serverChannel.close();
         }
         catch (IOException e) {
             log.error(e.toString());
@@ -124,7 +134,6 @@ public class ServerHandler implements Handler {
         closed = true;
         log.info(clientHandler.getServerName() + " : " + "server closed");
 
-        //responseBuffer.flip();
         if (responseBuffer.remaining() == 0 && !clientHandler.isClosed()) {
             clientHandler.close();
         }

@@ -1,9 +1,10 @@
-package proxy;
+package proxy.handlers;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.xbill.DNS.*;
 import org.xbill.DNS.Record;
+import proxy.Proxy;
 
 import java.io.IOException;
 import java.net.InetAddress;
@@ -18,19 +19,28 @@ import java.util.Queue;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentLinkedDeque;
 
-public class DnsResolver implements Handler {
-    private static final Logger log = LoggerFactory.getLogger(DnsResolver.class);
-    private static DnsResolver instance;
+public class DnsHandler implements Handler {
+    private static class DnsRequest {
+        ClientHandler clientHandler;
+        String address;
+
+        private DnsRequest(ClientHandler clientHandler, String address) {
+            this.clientHandler = clientHandler;
+            this.address = address;
+        }
+    }
+    private static final Logger log = LoggerFactory.getLogger(DnsHandler.class);
+    private static DnsHandler instance;
     private static final int BUFFER_SIZE = 512;
     private DatagramChannel dnsChannel;
     private Queue<DnsRequest> requestQueue;
     private Map<Name, ClientHandler> responseQueue;
     private SelectionKey dnsKey;
 
-    private DnsResolver() {}
-    public static DnsResolver getInstance() {
+    private DnsHandler() {}
+    public static DnsHandler getInstance() {
         if (instance == null) {
-            instance = new DnsResolver();
+            instance = new DnsHandler();
         }
         return instance;
     }
@@ -57,14 +67,14 @@ public class DnsResolver implements Handler {
     @Override
     public void handleKey() {
         if (dnsKey.isWritable()) {
-            sendDnsMessage();
+            writeDnsMessage();
         }
         if (dnsKey.isReadable()) {
             readDnsMessage();
         }
     }
 
-    private void sendDnsMessage() {
+    private void writeDnsMessage() {
         Message message = new Message();
         Header header = new Header();
         header.setFlag(Flags.AD);
@@ -125,16 +135,6 @@ public class DnsResolver implements Handler {
         }
         catch (IOException e) {
             e.printStackTrace();
-        }
-    }
-
-    private static class DnsRequest {
-        ClientHandler clientHandler;
-        String address;
-
-        private DnsRequest(ClientHandler clientHandler, String address) {
-            this.clientHandler = clientHandler;
-            this.address = address;
         }
     }
 }

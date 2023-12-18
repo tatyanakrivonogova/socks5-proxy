@@ -1,4 +1,4 @@
-package proxy;
+package proxy.protocol;
 
 public final class ProtocolParams {
     public static final byte SUPPORTED_VERSION = 0x05;

@@ -1,7 +1,10 @@
-package proxy;
+package proxy.handlers;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import proxy.ClientState;
+import proxy.Proxy;
+import proxy.protocol.ProtocolParams;
 
 import java.io.IOException;
 import java.net.InetAddress;
@@ -170,7 +173,7 @@ public class ClientHandler implements Handler {
                     int addressLength = connectRequest[4];
                     serverName = new String(Arrays.copyOfRange(connectRequest, 5, addressLength + 5));
                     log.info("Server name : " + serverName);
-                    DnsResolver.getInstance().addNewRequest(this, serverName);
+                    DnsHandler.getInstance().addNewRequest(this, serverName);
                     state = ClientState.WAIT_DNS;
                     clientKey.interestOps(0);
                 }
@@ -277,6 +280,7 @@ public class ClientHandler implements Handler {
                 return;
             }
             log.info(serverName + " : " + len + " bytes sent to client");
+
             if (serverHandler.getResponseBuffer().remaining() == 0) {
                 serverHandler.getResponseBuffer().clear();
                 clientKey.interestOps(SelectionKey.OP_READ);
@@ -298,7 +302,15 @@ public class ClientHandler implements Handler {
         clientKey.cancel();
         Proxy.getInstance().removeChannelFromMap(clientChannel);
         try {
-            clientChannel.close();
+            if (clientChannel != null) {
+                clientChannel.shutdownInput();
+                clientChannel.shutdownOutput();
+            }
+        } catch (IOException e) {
+            log.error(e.toString());
+        }
+        try {
+            if (clientChannel != null) clientChannel.close();
         }
         catch (IOException e) {
             log.error(e.toString());

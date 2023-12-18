@@ -2,6 +2,9 @@ package proxy;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import proxy.handlers.ClientHandler;
+import proxy.handlers.DnsHandler;
+import proxy.handlers.Handler;
 
 import java.io.IOException;
 import java.net.InetSocketAddress;
@@ -38,7 +41,7 @@ public class Proxy {
             serverSocketChannel.socket().bind(new InetSocketAddress(host, proxyPort));
             serverSocketChannel.register(selector, SelectionKey.OP_ACCEPT);
 
-            DnsResolver.getInstance().start(host, dnsPort, selector);
+            DnsHandler.getInstance().start(host, dnsPort, selector);
         }
         catch (IOException e) {
             log.error(e.toString());
