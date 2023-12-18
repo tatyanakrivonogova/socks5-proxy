@@ -13,11 +13,11 @@ import java.util.Arrays;
 
 public class ClientHandler implements Handler {
     private static final Logger log = LoggerFactory.getLogger(ClientHandler.class);
-    private static final int BUFFER_SIZE = 8192;
+    private static final int BUFFER_SIZE = 4096;
     private final SocketChannel clientChannel;
     private final SelectionKey clientKey;
     private ClientState state;
-    private byte authMethod = 0x00;
+    private byte authMethod = ProtocolParams.NO_AUTH;
     private final byte[] connectResponse = ProtocolParams.CONNECTING_REPLY_TEMPLATE;
     private byte responseCode;
     private String serverName;
@@ -90,12 +90,11 @@ public class ClientHandler implements Handler {
             log.info("Greeting received : " + Arrays.toString(bytes));
             if (bytes[0] != ProtocolParams.SUPPORTED_VERSION) {
                 log.error("Client doesn't support SOCKS5");
-                //close(); //write error
                 return;
             }
             boolean isFoundNoAuth = false;
             for (int i = 0; i < bytes[1]; ++i) {
-                if (bytes[i + 2] == 0x00) {
+                if (bytes[i + 2] == ProtocolParams.NO_AUTH) {
                     isFoundNoAuth = true;
                     break;
                 }
@@ -142,14 +141,14 @@ public class ClientHandler implements Handler {
             }
             byte[] connectRequest = Arrays.copyOfRange(byteBuffer.array(), 0, len);
             log.info("Connection info received : " + Arrays.toString(connectRequest));
-            if (connectRequest[0] != 0x05) {
+            if (connectRequest[0] != ProtocolParams.SUPPORTED_VERSION) {
                 log.error("Wrong SOCKS version received");
                 close();
                 return;
             }
-            if (connectRequest[1] != 0x01) {
+            if (connectRequest[1] != ProtocolParams.SUPPORTED_COMMAND_CODE) {
                 log.error("Unsupported command code was received");
-                responseCode = 0x07;
+                responseCode = ProtocolParams.UNSUPPORTED_COMMAND_CODE;
                 readyToWriteConnecting();
                 return;
             }
@@ -158,7 +157,7 @@ public class ClientHandler implements Handler {
             log.info("Host port : " + serverPort);
 
             switch (connectRequest[3]) {
-                case 0x01 -> {
+                case ProtocolParams.ADDR_TYPE_IPV4 -> {
                     byte[] addressBytes = Arrays.copyOfRange(connectRequest, 4, 8);
                     serverAddress = InetAddress.getByAddress(addressBytes);
                     serverName = serverAddress.getHostAddress();
@@ -167,7 +166,7 @@ public class ClientHandler implements Handler {
                     state = ClientState.WAIT_SERVER;
                     clientKey.interestOps(0);
                 }
-                case 0x03 -> {
+                case ProtocolParams.ADDR_TYPE_HOST -> {
                     int addressLength = connectRequest[4];
                     serverName = new String(Arrays.copyOfRange(connectRequest, 5, addressLength + 5));
                     log.info("Server name : " + serverName);
@@ -175,14 +174,14 @@ public class ClientHandler implements Handler {
                     state = ClientState.WAIT_DNS;
                     clientKey.interestOps(0);
                 }
-                case 0x04 -> {
+                case ProtocolParams.ADDR_TYPE_IPV6 -> {
                     log.error("Proxy server doesn't support IPv6 addresses");
-                    responseCode = 0x08;
+                    responseCode = ProtocolParams.UNSUPPORTED_ADDRESS_TYPE;
                     readyToWriteConnecting();
                 }
                 default -> {
                     log.error("Wrong type of address");
-                    responseCode = 0x08;
+                    responseCode = ProtocolParams.UNSUPPORTED_ADDRESS_TYPE;
                     readyToWriteConnecting();
                 }
             }
@@ -207,7 +206,7 @@ public class ClientHandler implements Handler {
         if (state == ClientState.WAIT_DNS) {
             if (serverAddress == null) {
                 log.info("DNS server can't find domain " + serverName);
-                responseCode = 0x04;
+                responseCode = ProtocolParams.UNAVAILABLE_HOST;
                 readyToWriteConnecting();
                 return;
             }
@@ -229,9 +228,8 @@ public class ClientHandler implements Handler {
     }
 
     private void writeConnecting() {
-        //byte[] connectResponse = Arrays.copyOf(connectResponse, connectResponse.length);
         connectResponse[1] = responseCode;
-        System.arraycopy(serverAddress.getAddress(), 0, connectResponse, 4, 4);
+        if (serverAddress != null) System.arraycopy(serverAddress.getAddress(), 0, connectResponse, 4, 4);
         connectResponse[8] = (byte) (serverPort >> 8);
         connectResponse[9] = (byte) serverPort;
 
@@ -239,7 +237,7 @@ public class ClientHandler implements Handler {
         try {
             clientChannel.write(byteBuffer);
             log.info("Response sent : " + Arrays.toString(byteBuffer.array()));
-            if (responseCode == 0x00) {
+            if (responseCode == ProtocolParams.CONNECTION_ESTABLISHED) {
                 state = ClientState.CONNECTED;
                 clientKey.interestOps(SelectionKey.OP_READ);
             }

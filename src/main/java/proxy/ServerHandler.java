@@ -12,7 +12,7 @@ import java.nio.channels.SocketChannel;
 
 public class ServerHandler implements Handler {
     private static final Logger log = LoggerFactory.getLogger(ServerHandler.class);
-    private static final int BUFFER_SIZE = 8192;
+    private static final int BUFFER_SIZE = 4096;
     private final SocketChannel serverChannel;
     private final SelectionKey serverKey;
     private final ClientHandler clientHandler;
@@ -50,12 +50,12 @@ public class ServerHandler implements Handler {
             serverChannel.finishConnect();
             serverKey.interestOps(SelectionKey.OP_READ);
             log.info("Connect finished");
-            clientHandler.setResponseCode((byte) 0x00);
+            clientHandler.setResponseCode(ProtocolParams.CONNECTION_ESTABLISHED);
             clientHandler.readyToWriteConnecting();
         }
         catch (IOException e) {
             log.error(e.toString());
-            clientHandler.setResponseCode((byte) 0x04);
+            clientHandler.setResponseCode(ProtocolParams.UNAVAILABLE_HOST);
             clientHandler.readyToWriteConnecting();
         }
     }

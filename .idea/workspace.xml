@@ -4,23 +4,12 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="2e5a6d68-eef5-461e-a994-7fc6fe9a3f08" name="Changes" comment="works bad, start refactoring">
-      <change afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/proxy/ClientHandler.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/proxy/ClientState.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/proxy/DnsResolver.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/proxy/Handler.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/proxy/ServerHandler.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/resources/log4j.properties" afterDir="false" />
+    <list default="true" id="2e5a6d68-eef5-461e-a994-7fc6fe9a3f08" name="Changes" comment="resolving ip in connecting reply">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/pom.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/client/Client.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/client/Client.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/proxy/Attachment.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/proxy/Handshake.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/proxy/Main.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/proxy/Main.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/proxy/ClientHandler.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/proxy/ClientHandler.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/proxy/ProtocolParams.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/proxy/ProtocolParams.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/proxy/Proxy.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/proxy/Proxy.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/proxy/State.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/proxy/ServerHandler.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/proxy/ServerHandler.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -108,12 +97,20 @@
       <option name="project" value="LOCAL" />
       <updated>1702876408151</updated>
     </task>
-    <option name="localTasksCounter" value="2" />
+    <task id="LOCAL-00002" summary="resolving ip in connecting reply">
+      <created>1702893672283</created>
+      <option name="number" value="00002" />
+      <option name="presentableId" value="LOCAL-00002" />
+      <option name="project" value="LOCAL" />
+      <updated>1702893672283</updated>
+    </task>
+    <option name="localTasksCounter" value="3" />
     <servers />
   </component>
   <component name="VcsManagerConfiguration">
     <MESSAGE value="works bad, start refactoring" />
-    <option name="LAST_COMMIT_MESSAGE" value="works bad, start refactoring" />
+    <MESSAGE value="resolving ip in connecting reply" />
+    <option name="LAST_COMMIT_MESSAGE" value="resolving ip in connecting reply" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
@@ -160,52 +157,52 @@
         </line-breakpoint>
         <line-breakpoint enabled="true" type="java-line">
           <url>file://$PROJECT_DIR$/src/main/java/proxy/ClientHandler.java</url>
-          <line>275</line>
+          <line>273</line>
           <option name="timeStamp" value="90" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="java-line">
           <url>file://$PROJECT_DIR$/src/main/java/proxy/ClientHandler.java</url>
-          <line>274</line>
+          <line>272</line>
           <option name="timeStamp" value="91" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="java-line">
           <url>file://$PROJECT_DIR$/src/main/java/proxy/ClientHandler.java</url>
-          <line>277</line>
+          <line>275</line>
           <option name="timeStamp" value="92" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="java-line">
           <url>file://$PROJECT_DIR$/src/main/java/proxy/ClientHandler.java</url>
-          <line>278</line>
+          <line>276</line>
           <option name="timeStamp" value="93" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="java-line">
           <url>file://$PROJECT_DIR$/src/main/java/proxy/ClientHandler.java</url>
-          <line>280</line>
+          <line>278</line>
           <option name="timeStamp" value="94" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="java-line">
           <url>file://$PROJECT_DIR$/src/main/java/proxy/ClientHandler.java</url>
-          <line>281</line>
+          <line>279</line>
           <option name="timeStamp" value="95" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="java-line">
           <url>file://$PROJECT_DIR$/src/main/java/proxy/ClientHandler.java</url>
-          <line>283</line>
+          <line>281</line>
           <option name="timeStamp" value="96" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="java-line">
           <url>file://$PROJECT_DIR$/src/main/java/proxy/ClientHandler.java</url>
-          <line>282</line>
+          <line>280</line>
           <option name="timeStamp" value="97" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="java-line">
           <url>file://$PROJECT_DIR$/src/main/java/proxy/ClientHandler.java</url>
-          <line>284</line>
+          <line>282</line>
           <option name="timeStamp" value="98" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="java-line">
           <url>file://$PROJECT_DIR$/src/main/java/proxy/ClientHandler.java</url>
-          <line>285</line>
+          <line>283</line>
           <option name="timeStamp" value="99" />
         </line-breakpoint>
       </breakpoints>
