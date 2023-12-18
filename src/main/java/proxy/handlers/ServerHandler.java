@@ -18,9 +18,9 @@ public class ServerHandler implements Handler {
     private final SocketChannel serverChannel;
     private final SelectionKey serverKey;
     private final ClientHandler clientHandler;
-    private final ByteBuffer requestBuffer;
-    private final ByteBuffer responseBuffer;
-    private boolean closed = false;
+    private final ByteBuffer inputBuffer;
+    private final ByteBuffer outputBuffer;
+    private boolean isClosed = false;
 
     public ServerHandler(ClientHandler clientHandler, InetAddress serverAddress, int serverPort) throws IOException {
         this.clientHandler = clientHandler;
@@ -30,8 +30,8 @@ public class ServerHandler implements Handler {
         log.info("Try to connect to server : " + serverAddress.getHostAddress() + ":" + serverPort);
         Proxy.getInstance().putNewChannel(serverChannel, this);
         serverKey = serverChannel.register(clientHandler.getClientKey().selector(), SelectionKey.OP_CONNECT);
-        requestBuffer = ByteBuffer.allocate(BUFFER_SIZE);
-        responseBuffer = ByteBuffer.allocate(BUFFER_SIZE);
+        inputBuffer = ByteBuffer.allocate(BUFFER_SIZE);
+        outputBuffer = ByteBuffer.allocate(BUFFER_SIZE);
     }
 
     @Override
@@ -64,19 +64,19 @@ public class ServerHandler implements Handler {
 
     private void write() {
         try {
-            requestBuffer.flip();
-            int len = serverChannel.write(requestBuffer);
+            inputBuffer.flip();
+            int len = serverChannel.write(inputBuffer);
             if (len < 0) {
                 close();
                 return;
             }
             log.info(clientHandler.getServerName() + " : " + len + " bytes sent to server");
-            if (requestBuffer.remaining() == 0) {
-                requestBuffer.clear();
+            if (inputBuffer.remaining() == 0) {
+                inputBuffer.clear();
                 serverKey.interestOps(SelectionKey.OP_READ);
             }
             else {
-                requestBuffer.compact();
+                inputBuffer.compact();
             }
         }
         catch (IOException e) {
@@ -87,7 +87,7 @@ public class ServerHandler implements Handler {
 
     private void read() {
         try {
-            int len = serverChannel.read(responseBuffer);
+            int len = serverChannel.read(outputBuffer);
             if (len < 0) {
                 close();
                 return;
@@ -102,12 +102,12 @@ public class ServerHandler implements Handler {
         }
     }
 
-    public ByteBuffer getRequestBuffer() {
-        return requestBuffer;
+    public ByteBuffer getInputBuffer() {
+        return inputBuffer;
     }
 
-    public ByteBuffer getResponseBuffer() {
-        return responseBuffer;
+    public ByteBuffer getOutputBuffer() {
+        return outputBuffer;
     }
 
     public SelectionKey getServerKey() {
@@ -131,15 +131,15 @@ public class ServerHandler implements Handler {
         catch (IOException e) {
             log.error(e.toString());
         }
-        closed = true;
+        isClosed = true;
         log.info(clientHandler.getServerName() + " : " + "server closed");
 
-        if (responseBuffer.remaining() == 0 && !clientHandler.isClosed()) {
+        if (outputBuffer.remaining() == 0 && !clientHandler.isClosed()) {
             clientHandler.close();
         }
     }
 
     public boolean isClosed() {
-        return closed;
+        return isClosed;
     }
 }

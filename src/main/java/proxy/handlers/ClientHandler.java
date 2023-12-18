@@ -256,7 +256,7 @@ public class ClientHandler implements Handler {
 
     private void read() {
         try {
-            int len = clientChannel.read(serverHandler.getRequestBuffer());
+            int len = clientChannel.read(serverHandler.getInputBuffer());
             if (len < 0) {
                 close();
                 return;
@@ -273,23 +273,23 @@ public class ClientHandler implements Handler {
 
     private void write() {
         try {
-            serverHandler.getResponseBuffer().flip();
-            int len = clientChannel.write(serverHandler.getResponseBuffer());
+            serverHandler.getOutputBuffer().flip();
+            int len = clientChannel.write(serverHandler.getOutputBuffer());
             if (len < 0) {
                 close();
                 return;
             }
             log.info(serverName + " : " + len + " bytes sent to client");
 
-            if (serverHandler.getResponseBuffer().remaining() == 0) {
-                serverHandler.getResponseBuffer().clear();
+            if (serverHandler.getOutputBuffer().remaining() == 0) {
+                serverHandler.getOutputBuffer().clear();
                 clientKey.interestOps(SelectionKey.OP_READ);
                 if (serverHandler.isClosed()) {
                     close();
                 }
             }
             else {
-                serverHandler.getResponseBuffer().compact();
+                serverHandler.getOutputBuffer().compact();
             }
         }
         catch (IOException e) {

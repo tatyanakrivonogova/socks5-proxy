@@ -4,21 +4,10 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="2e5a6d68-eef5-461e-a994-7fc6fe9a3f08" name="Changes" comment="protocol params">
+    <list default="true" id="2e5a6d68-eef5-461e-a994-7fc6fe9a3f08" name="Changes" comment="add shutdown">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/client/Client.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/client/Client.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/exceptions/Socks5ProtocolException.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/proxy/exceptions/Socks5ProtocolException.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/exceptions/TooLongHandshakeMessage.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/proxy/exceptions/TooLongHandshakeMessage.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/exceptions/UnsupportedAddressType.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/proxy/exceptions/UnsupportedAddressType.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/exceptions/UnsupportedCommandCode.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/proxy/exceptions/UnsupportedCommandCode.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/exceptions/UnsupportedMethodException.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/proxy/exceptions/UnsupportedMethodException.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/exceptions/UnsupportedSocksVersionException.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/proxy/exceptions/UnsupportedSocksVersionException.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/proxy/ClientHandler.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/proxy/handlers/ClientHandler.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/proxy/DnsResolver.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/proxy/handlers/DnsHandler.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/proxy/Handler.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/proxy/handlers/Handler.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/proxy/ProtocolParams.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/proxy/protocol/ProtocolParams.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/proxy/Proxy.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/proxy/Proxy.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/proxy/ServerHandler.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/proxy/handlers/ServerHandler.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/proxy/handlers/ClientHandler.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/proxy/handlers/ClientHandler.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/proxy/handlers/ServerHandler.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/proxy/handlers/ServerHandler.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -130,14 +119,22 @@
       <option name="project" value="LOCAL" />
       <updated>1702894514010</updated>
     </task>
-    <option name="localTasksCounter" value="4" />
+    <task id="LOCAL-00004" summary="add shutdown">
+      <created>1702914014521</created>
+      <option name="number" value="00004" />
+      <option name="presentableId" value="LOCAL-00004" />
+      <option name="project" value="LOCAL" />
+      <updated>1702914014521</updated>
+    </task>
+    <option name="localTasksCounter" value="5" />
     <servers />
   </component>
   <component name="VcsManagerConfiguration">
     <MESSAGE value="works bad, start refactoring" />
     <MESSAGE value="resolving ip in connecting reply" />
     <MESSAGE value="protocol params" />
-    <option name="LAST_COMMIT_MESSAGE" value="protocol params" />
+    <MESSAGE value="add shutdown" />
+    <option name="LAST_COMMIT_MESSAGE" value="add shutdown" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
