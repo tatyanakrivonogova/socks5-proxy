@@ -40,8 +40,8 @@ public class Client {
 //        };
 
 //        String host = "lib.ru";
-        //String host = "example.com";
-        String host = "speedtest.tele2.net";
+        String host = "example.com";
+        //String host = "speedtest.tele2.net";
         byte[] request = new byte[]{
                 0x05, // Версия SOCKS5
                 0x01, // Команда - установка TCP-соединения
@@ -49,9 +49,9 @@ public class Client {
                 0x03,
                 (byte) host.length(), // Длина адреса
                 // Адрес example.com в виде байтов
-                //'e', 'x', 'a', 'm', 'p', 'l', 'e', '.', 'c', 'o', 'm',
+                'e', 'x', 'a', 'm', 'p', 'l', 'e', '.', 'c', 'o', 'm',
                 //'l', 'i', 'b', '.', 'r', 'u',
-                's', 'p', 'e', 'e', 'd', 't', 'e', 's', 't', '.', 't', 'e', 'l', 'e', '2', '.', 'n', 'e', 't',
+                //'s', 'p', 'e', 'e', 'd', 't', 'e', 's', 't', '.', 't', 'e', 'l', 'e', '2', '.', 'n', 'e', 't',
                 (byte) (80 >> 8), (byte) 80 // Порт (80) в виде байтов
         };
         proxyOut.write(request);
@@ -64,12 +64,18 @@ public class Client {
         for(int i = 0; i < readBytes; ++i) {
             System.out.println(response2[i]);
         }
+
+        if (response2[1] != 0) {
+            proxySocket.close();
+            System.out.println("Proxy can't establish the connection with server. Close...");
+            return;
+        }
 //        int port = ((response2[8] & 0xFF) << 8) + (response2[9] & 0xFF);
 //        System.out.println("port: " + port);
 
         // Отправляем HTTP-запрос на example.com
-        //String httpRequest = "GET / HTTP/1.0\r\nHost: example.com\r\n\r\n";
-        String httpRequest = "GET /10MB.zip HTTP/1.0\r\nHost: speedtest.tele2.net\r\n\r\n";
+        String httpRequest = "GET / HTTP/1.0\r\nHost: example.com\r\n\r\n";
+        //String httpRequest = "GET /10MB.zip HTTP/1.0\r\nHost: speedtest.tele2.net\r\n\r\n";
         proxyOut.write(httpRequest.getBytes());
 
         System.out.println("Request was sent");
@@ -89,6 +95,6 @@ public class Client {
         }
 
         // Закрываем соединение с прокси
-        //proxySocket.close();//
+        proxySocket.close();//
     }
 }

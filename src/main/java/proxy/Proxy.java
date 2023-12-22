@@ -16,11 +16,11 @@ import java.util.concurrent.ConcurrentHashMap;
 
 public class Proxy {
     private static final Logger log = LoggerFactory.getLogger(Proxy.class);
-
+    private static final long DNS_TIMEOUT = 1000;
     private static Proxy instance;
-
     private Selector selector;
     private Map<SelectableChannel, Handler> channelHandlers;
+    private DnsHandler dnsHandler;
 
     private Proxy() {}
     public static Proxy getInstance() {
@@ -31,7 +31,6 @@ public class Proxy {
     }
 
     public void start(String host, int proxyPort, int dnsPort) {
-
         channelHandlers = new ConcurrentHashMap<>();
 
         try {
@@ -41,7 +40,8 @@ public class Proxy {
             serverSocketChannel.socket().bind(new InetSocketAddress(host, proxyPort));
             serverSocketChannel.register(selector, SelectionKey.OP_ACCEPT);
 
-            DnsHandler.getInstance().start(host, dnsPort, selector);
+            dnsHandler = DnsHandler.getInstance();
+            dnsHandler.start(host, dnsPort, selector);
         }
         catch (IOException e) {
             log.error(e.toString());
@@ -50,8 +50,16 @@ public class Proxy {
 
         log.info("Proxy server started. Host : " + host + ". Port : " + proxyPort);
         try {
-            while (selector.select() > -1) {
+            while (true) {
+                long currentTimeout = 0;
+                if (dnsHandler.isWaitingForResponse()) {
+                    currentTimeout = DNS_TIMEOUT;
+                }
+                selector.select(currentTimeout);
                 Iterator<SelectionKey> iterator = selector.selectedKeys().iterator();
+                if (currentTimeout > 0 && !iterator.hasNext()) {
+                    dnsHandler.handleLostDatagram();
+                }
                 while (iterator.hasNext()) {
                     SelectionKey key = iterator.next();
                     iterator.remove();
